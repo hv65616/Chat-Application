@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.svg";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,10 +14,22 @@ function Register() {
     confirmPassword: "",
   });
   const navigate = useNavigate();
+  const toastoptions = {
+    position: "bottom-right",
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "dark",
+  };
+  useEffect(() => {
+    if (localStorage.getItem("chat-app-user")) {
+      navigate("/");
+    }
+  }, []);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (handleValidation()) {
-      const { password, confirmPassword, username, email } = values;
+      const { password, username, email } = values;
       const { data } = await axios.post(registerRoute, {
         username,
         email,
@@ -26,18 +38,11 @@ function Register() {
       if (data.status === false) {
         toast.error(data.msg, toastoptions);
       }
-      if(data.status===true){
-        localStorage.setItem('chat-app-user',JSON.stringify(data.user))
-        navigate("/")
+      if (data.status === true) {
+        localStorage.setItem("chat-app-user", JSON.stringify(data.user));
+        navigate("/");
       }
     }
-  };
-  const toastoptions = {
-    position: "bottom-right",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
   };
   const handleValidation = () => {
     const { password, confirmPassword, username, email } = values;
