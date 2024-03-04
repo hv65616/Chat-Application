@@ -34,4 +34,32 @@ const register = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = register;
+const login = async (req, res, next) => {
+  //   console.log(req.body);
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username: username });
+    if (!user) {
+      return res.json({
+        msg: "Incorrect username",
+        status: false,
+      });
+    }
+    const ispasswordvalid = await bcrypt.compare(password, user.password);
+    if (!ispasswordvalid) {
+      return res.json({
+        msg: "Incorrect password",
+        status: false,
+      });
+    }
+    delete user.password
+    return res.json({
+      status: true,
+      user,
+    });
+  } catch (error) {
+    console.log(`Error:- ${error}`);
+    next(error);
+  }
+};
+module.exports = { register, login };
