@@ -1,6 +1,8 @@
 const express = require("express");
-const register = require("../controllers/userController");
-const { model } = require("mongoose");
+// const register = require("../controllers/userController");
+// const login = require("../controllers/userController")
+const userController = require("../controllers/userController")
 const router = express.Router();
-router.post("/register", register);
+router.post("/register", userController.register);
+router.post("/login", userController.login);
 module.exports = router
