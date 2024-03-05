@@ -52,7 +52,7 @@ const login = async (req, res, next) => {
         status: false,
       });
     }
-    delete user.password
+    delete user.password;
     return res.json({
       status: true,
       user,
@@ -62,4 +62,22 @@ const login = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { register, login };
+
+const setAvatar = async (req, res, next) => {
+  try {
+    const userid = req.params.id;
+    const avatarImage = req.body.image;
+    const userdata = await User.findByIdAndUpdate(userid, {
+      isAvatarImageSet: true,
+      avatarImage,
+    });
+    return res.json({
+      isSet: userdata.isAvatarImageSet,
+      image: userdata.avatarImage,
+    });
+  } catch (error) {
+    console.log(`Error:- ${error}`);
+    next(error);
+  }
+};
+module.exports = { register, login, setAvatar };
