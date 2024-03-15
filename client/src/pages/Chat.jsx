@@ -40,6 +40,7 @@ function Chat() {
     setCurrentChat(chat);
   };
   // console.log(currentChat);
+  // console.log(currentUser);
   return (
     <>
       <Container>
@@ -52,7 +53,10 @@ function Chat() {
           {isLoaded && currentChat === undefined ? (
             <Welcome currentUser={currentUser}></Welcome>
           ) : (
-            <ChatContainer currentChat={currentChat}></ChatContainer>
+            <ChatContainer
+              currentChat={currentChat}
+              currentUser={currentUser}
+            ></ChatContainer>
           )}
         </div>
       </Container>
