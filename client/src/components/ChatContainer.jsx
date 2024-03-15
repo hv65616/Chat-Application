@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logout from "./Logout";
-import ChatInput from "../components/ChatInput";
+import ChatInput from "./ChatInput";
 import Message from "../components/Message";
-export default function ChatContainer({ currentChat }) {
-  //   console.log(currentChat);
+import axios from "axios";
+import { sendMessageRoute } from "../utils/apiRoutes";
+import { getAllMessageRoute } from "../utils/apiRoutes";
+export default function ChatContainer({ currentChat, currentUser }) {
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    // Check if currentUser is defined and has _id property
+    if (currentUser && currentUser._id) {
+      const fetchchat = async () => {
+        const response = await axios.post(getAllMessageRoute, {
+          from: currentUser._id,
+          to: currentChat._id,
+        });
+        setMessages(response.data);
+      };
+      fetchchat();
+    }
+  }, [currentChat, currentUser]); // Include currentUser in dependency array
+
   const handleSendMsg = async (msg) => {
-    alert(msg);
+    await axios.post(sendMessageRoute, {
+      from: currentUser._id,
+      to: currentChat._id,
+      message: msg,
+    });
   };
   return (
     <>
@@ -25,7 +46,22 @@ export default function ChatContainer({ currentChat }) {
           </div>
           <Logout></Logout>
         </div>
-        <Message></Message>
+        {/* <Message></Message> */}
+        <div className="chat-messages">
+          {messages.map((message) => {
+            return (
+              <div
+                className={`message ${
+                  message.fromSelf ? "sended" : "recieved"
+                }`}
+              >
+                <div className="content">
+                  <p>{message.message}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
         <ChatInput handleSendMsg={handleSendMsg}></ChatInput>
       </Container>
     </>
