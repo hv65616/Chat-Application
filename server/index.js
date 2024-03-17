@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const socket = require("socket.io");
 const userRoutes = require("./routes/userRoute");
 const messageRoutes = require("./routes/messagesRoute");
 const dotenv = require("dotenv");
@@ -10,6 +9,8 @@ dotenv.config({ path: "./config.env" });
 const port = process.env.PORT || 8081;
 const mongourl = process.env.MONGO_URL;
 const app = express();
+const http = require("http").Server(app);
+const socket = require("socket.io")(http);
 const corsOptions = {
   origin: "https://bingle.onrender.com",
   credentials: true, //access-control-allow-credentials:true
@@ -34,7 +35,7 @@ mongoose
 app.use("/api/auth", userRoutes);
 app.use("/api/message", messageRoutes);
 
-const server = app.listen(port, (req, res) => {
+const server = http.listen(port, (req, res) => {
   console.log(`Server is running on ${port}`);
 });
 
