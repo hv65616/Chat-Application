@@ -12,6 +12,11 @@ const mongourl = process.env.MONGO_URL;
 const app = express();
 
 app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://bingle.onrender.com");
+  // Add other CORS headers as needed
+  next();
+});
 app.use(express.json());
 
 mongoose
