@@ -11,20 +11,12 @@ const port = process.env.PORT || 8081;
 const mongourl = process.env.MONGO_URL;
 const app = express();
 
-// Allow requests from specific origin(s)
-const allowedOrigins = ['https://bingle.onrender.com'];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
+app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://bingle.onrender.com");
+  // Add other CORS headers as needed
+  next();
+});
 app.use(express.json());
 
 mongoose
