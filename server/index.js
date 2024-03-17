@@ -10,12 +10,7 @@ dotenv.config({ path: "./config.env" });
 const port = process.env.PORT || 8081;
 const mongourl = process.env.MONGO_URL;
 const app = express();
-const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
+
 app.use(cors());
 app.use(express.json());
 
@@ -40,9 +35,7 @@ const server = app.listen(port, (req, res) => {
 
 const io = socket(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
+    origin: "https://bingle.onrender.com/",
     credentials: true,
   },
 });
