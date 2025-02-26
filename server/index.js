@@ -11,9 +11,12 @@ const port = process.env.PORT || 8081;
 const mongourl = process.env.MONGO_URL;
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://bingle.onrender.com");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   // Add other CORS headers as needed
   next();
 });
@@ -31,6 +34,7 @@ mongoose
     console.log(err);
   });
 
+
 app.use("/api/auth", userRoutes);
 app.use("/api/message", messageRoutes);
 
@@ -40,7 +44,7 @@ const server = app.listen(port, (req, res) => {
 
 const io = socket(server, {
   cors: {
-    origin: "https://bingle.onrender.com/",
+    origin: "http://localhost:3000",
     credentials: true,
   },
 });
